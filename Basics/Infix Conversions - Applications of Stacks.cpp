@@ -38,7 +38,7 @@ void push(struct node **head,char val)
 char pop(struct node **head)
 {
 	struct node *temp = *head;
-	int val = temp->val;
+	char val = temp->val;
 	*head = (*head)->next;
 	delete temp;
 	return val;
