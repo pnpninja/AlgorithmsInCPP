@@ -674,7 +674,77 @@ void right_view_wrapper(struct node *head)
 	}
 	return;
 }
+void print_level_order(struct node *head,int level,int flip_flag)
+{
+	if(head==NULL)
+	{
+		return;
+	}	
+	if(level==1)
+	{
+		cout<<head->val<<" ";
+	}
+	else
+	{
+		if(flip_flag==0)
+		{
+			print_level_order(head->left,level-1,flip_flag);
+			print_level_order(head->right,level-1,flip_flag);
+		}
+		else
+		{
+			print_level_order(head->right,level-1,flip_flag);
+			print_level_order(head->left,level-1,flip_flag);
+		}
+	}
+}
 
+void print_level_order_wrapper(struct node *head)
+{
+	cout<<"The Level Order of Binary Search Tree is :";
+	int height_tree = height(head);
+	for(int a=1;a<=height_tree;a++)
+	{
+		print_level_order(head,a,0);
+	}
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+void spiral_order_print(struct node *head)
+{
+	cout<<"The Spiral Level Order of Binary Search Tree is :";
+	int height_tree = height(head);
+	int flip_flag=0;
+	for(int a=1;a<=height_tree;a++)
+	{
+		print_level_order(head,a,flip_flag);
+		if(flip_flag==0)
+		{
+			flip_flag=1;
+		}
+		else
+		{
+			flip_flag=0;
+		}
+	}
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
 int main(int argc, char* argv[])
 {
 	while(1)
@@ -701,7 +771,9 @@ int main(int argc, char* argv[])
 		cout<<"17. Bottom View\n";
 		cout<<"18. Left View\n";
 		cout<<"19. Right View\n";
-		cout<<"20. Exit\n";
+		cout<<"20. Level Order View\n";
+		cout<<"21. Spiral Order View\n";
+		cout<<"22. Exit\n";
 		cout<<"Enter choice: ";
 		cin>>choice;
 		switch(choice)
@@ -745,9 +817,13 @@ int main(int argc, char* argv[])
 					break;
 			case 19:right_view_wrapper(HEAD);
 					break;
+			case 20:print_level_order_wrapper(HEAD);
+					break;
+			case 21:spiral_order_print(HEAD);
+					break;
 			default:break;
 		}
-		if(choice==20)
+		if(choice==22)
 			break;
 	}
 	return 0;
