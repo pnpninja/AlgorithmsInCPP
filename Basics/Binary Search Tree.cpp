@@ -523,8 +523,158 @@ void left_leaf_sum_wrapper(struct node *head)
 		cin>>temp;
 	}
 	return;
-
 }
+
+struct node *remove_short_paths(struct node *head,int level,int max)
+{
+	if(head==NULL)
+	{
+		return NULL;
+	}
+	else
+	{
+		head->left=remove_short_paths(head->left,level+1,max);
+		head->right=remove_short_paths(head->right,level+1,max);
+		if(head->left==NULL&&head->right==NULL&&level<max)
+		{
+			delete head;
+			return NULL;
+		}
+		else
+		{
+			return head;
+		}
+	}
+}
+
+int height(struct node *head)
+{
+	if(head==NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		int lheight = height(head->left);
+		int rheight = height(head->right);
+		if(lheight>rheight)
+		{
+			return lheight+1;
+		}
+		else
+		{
+			return rheight+1;
+		}
+	}
+}
+void bottom_view(struct node *head)
+{
+	if(head==NULL)
+	{
+		return;
+	}
+	else
+	{
+		bottom_view(head->left);
+		if(height(head)==1||height(head)==2)
+		{
+			cout<<head->val<<" ";
+		}
+		bottom_view(head->right);
+	}
+}
+
+void bottom_view_wrapper(struct node *head)
+{
+	cout<<"The bottom view is : ";
+	bottom_view(head);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+void remove_short_paths_wrapper(struct node **head)
+{
+	int pl;
+	cout<<"Enter min path length : ";
+	cin>>pl;
+	*head = remove_short_paths(*head,1,pl);
+	view_inorder_wrapper(head);
+	return;
+}
+
+void left_view(struct node *head,int cur_level,int &max_level)
+{
+	if(head==NULL)
+	{
+		return;
+	}
+	else
+	{
+		if(cur_level>max_level)
+		{
+			cout<<head->val<<" ";
+			max_level = cur_level;
+		}
+		left_view(head->left,cur_level+1,max_level);
+		left_view(head->right,cur_level+1,max_level);
+	}
+}
+void right_view(struct node *head,int cur_level,int &max_level)
+{
+	if(head==NULL)
+	{
+		return;
+	}
+	else
+	{
+		if(cur_level>max_level)
+		{
+			cout<<head->val<<" ";
+			max_level = cur_level;
+		}
+		right_view(head->right,cur_level+1,max_level);
+		right_view(head->left,cur_level+1,max_level);
+	}
+}
+
+void left_view_wrapper(struct node *head)
+{
+	cout<<"Left view is : ";
+	int max_level=0;
+	left_view(head,1,max_level);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+void right_view_wrapper(struct node *head)
+{
+	cout<<"Right view is : ";
+	int max_level=0;
+	right_view(head,1,max_level);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
 int main(int argc, char* argv[])
 {
 	while(1)
@@ -547,7 +697,11 @@ int main(int argc, char* argv[])
 		cout<<"13. Minimum Vertex Cover\n";
 		cout<<"14. Check if Complete BST\n";
 		cout<<"15. Sum of all left leaves\n";
-		cout<<"16. Exit\n";
+		cout<<"16. Remove paths less than k\n";
+		cout<<"17. Bottom View\n";
+		cout<<"18. Left View\n";
+		cout<<"19. Right View\n";
+		cout<<"20. Exit\n";
 		cout<<"Enter choice: ";
 		cin>>choice;
 		switch(choice)
@@ -583,9 +737,17 @@ int main(int argc, char* argv[])
 					break;
 			case 15:left_leaf_sum_wrapper(HEAD);
 					break;
+			case 16:remove_short_paths_wrapper(&HEAD);
+					break;
+			case 17:bottom_view_wrapper(HEAD);
+					break;
+			case 18:left_view_wrapper(HEAD);
+					break;
+			case 19:right_view_wrapper(HEAD);
+					break;
 			default:break;
 		}
-		if(choice==16)
+		if(choice==20)
 			break;
 	}
 	return 0;
