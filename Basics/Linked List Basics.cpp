@@ -11,7 +11,15 @@ struct node
 	int val;
 };
 
+struct treenode
+{
+	int val;
+	struct treenode *left;
+	struct treenode *right;
+};
+
 struct node *HEAD = NULL;
+struct treenode *TREEHEAD = NULL;
 
 void add_node(struct node **head)
 {
@@ -595,6 +603,147 @@ void remove_duplicates(struct node **head)
 		return;
 	}
 }
+void rotate(struct node **head,int pos)
+{
+	struct node *traverser = *head;
+	while(traverser->next!=NULL)
+	{
+		traverser=traverser->next;
+	}
+	traverser->next=*head;
+	int temp = pos;
+	while(temp!=0)
+	{
+		*head = (*head)->next;
+		temp--;
+	}
+	while(traverser->next!=*head)
+	{
+		traverser = traverser->next;
+	}
+	traverser->next=NULL;
+	return;
+}
+
+void rotate_wrapper(struct node **head)
+{
+	int num;
+	cout<<"Enter rotation factor : ";
+	cin>>num;
+	if(num==0||*head==NULL||(*head)->next==NULL)
+	{
+		cout<<"Nothing to do!";
+	}
+	else
+	{
+		rotate(head,num);
+		char temp1;
+		cout<<"Rotated!";
+	}
+	char temp1;
+	cout<<"\nPress Y to return : ";
+	cin>>temp1;
+	while(temp1!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp1;
+	}
+	return;
+}
+
+void pairwise_swap(struct node **head)
+{
+	if(*head==NULL||(*head)->next==NULL)
+	{
+		return;
+	}
+	else
+	{
+		struct node *traverser = *head;
+		while(traverser!=NULL && traverser->next!=NULL)
+		{
+			traverser->val = traverser->val+traverser->next->val;
+			traverser->next->val = 	traverser->val-traverser->next->val;
+			traverser->val = traverser->val-traverser->next->val;
+			traverser = traverser->next->next;
+		}
+		return;
+	}
+}
+
+void alternate_delete(struct node **head)
+{
+	struct node *traverser = *head;
+	while(traverser!=NULL)
+	{
+		if(traverser->next==NULL)
+		{
+			break;
+		}
+		else
+		{
+			struct node *new_node = traverser->next;
+			traverser->next = new_node->next;
+			delete new_node;
+			traverser = traverser->next;
+		}
+	}
+	return;
+
+}
+
+void view_inorder(struct treenode **head)
+{
+	if(*head!=NULL)
+	{
+		view_inorder(&((*head)->left));
+		cout<<(*head)->val<<" ";
+		view_inorder(&((*head)->right));
+	}
+	else
+	{
+		return;
+	}
+}
+
+void view_inorder_wrapper(struct treenode **head)
+{
+	cout<<"The Inorder Of the Binary Search Tree : \n";
+	view_inorder(head);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+struct treenode* convert_to_tree(struct node **head,int siz)
+{
+	if(siz<=0)
+	{
+		return NULL;
+	}
+	struct treenode *left = convert_to_tree(head,siz/2);
+	struct treenode *root = new treenode;
+	root->val = (*head)->val;
+	*head = (*head)->next;
+	root->left = left;
+	root->right = convert_to_tree(head,siz-siz/2-1);
+	return root;
+}
+
+void convert_to_tree_wrapper(struct node **head)
+{
+	merge_sort(head);
+	TREEHEAD = convert_to_tree(head,count_elements(head));
+	view_inorder_wrapper(&TREEHEAD);
+	return;
+}
+
 int main(int argc, char* argv[])
 {
 	while(1)
@@ -614,7 +763,11 @@ int main(int argc, char* argv[])
 		cout<<"10. Print Middle Element\n";
 		cout<<"11. Palindrome Check\n";
 		cout<<"12. Remove Duplicates\n";
-		cout<<"13. Exit\n";
+		cout<<"13. Rotate\n";
+		cout<<"14. Pairwise Swap\n";
+		cout<<"15. Alternate delete\n";
+		cout<<"16. Convert list to tree and display inorder\n";
+		cout<<"17. Exit\n";
 		cout<<"Enter choice: ";
 		cin>>choice;
 		switch(choice)
@@ -659,9 +812,17 @@ int main(int argc, char* argv[])
 					break;
 			case 12:remove_duplicates(&HEAD);
 					break;
+			case 13:rotate_wrapper(&HEAD);
+					break;
+			case 14:pairwise_swap(&HEAD);
+					break;
+			case 15:alternate_delete(&HEAD);
+					break;
+			case 16:convert_to_tree_wrapper(&HEAD);
+					break;
 			default:break;
 		}
-		if(choice==13)
+		if(choice==16)
 			break;
 	}
 	return 0;

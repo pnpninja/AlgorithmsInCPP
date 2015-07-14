@@ -20,7 +20,33 @@ struct listnode
 
 struct node *HEAD = NULL;
 struct listnode *LISTHEAD = NULL;
+struct listnode *STACKHEAD = NULL;
+int size_of_tree(struct node **head)
+{
+	if(*head==NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		return size_of_tree(&((*head)->left))+1+size_of_tree(&((*head)->right));
+	}
+}
 
+void size_of_tree_wrapper(struct node **head)
+{
+	cout<<"Size of the tree is "<<size_of_tree(head);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+
+}
 void add_listnode(struct listnode **head,int new_val)
 {
 	if (*head == NULL)
@@ -194,6 +220,157 @@ void add_element_wrapper(struct node **head)
 	}
 	return;
 }
+
+bool nos_subtrees_in_range(struct node **head,int low,int high,int &count)
+{
+	if(*head==NULL)
+	{
+		return true;
+	}
+	else
+	{
+		bool left = ((*head)->left)?nos_subtrees_in_range(&((*head)->left),low,high,count):true;
+		bool right = ((*head)->right)?nos_subtrees_in_range(&((*head)->right),low,high,count):true;
+		if(left && right && (*head)->val>=low && (*head)->val<=high)
+		{
+			++count;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+void nos_subtrees_in_range_wrapper(struct node **head)
+{
+	int low,high,count=0;
+	cout<<"Enter lower and upper limit : ";
+	cin>>low>>high;
+	bool tem = nos_subtrees_in_range(head,low,high,count);
+	cout<<"The number of subtrees in that range are : "<<count;
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+void nos_nodes_in_range(struct node **head,int low,int high,int &count)
+{
+	if(*head==NULL)
+	{
+		return;
+	}
+	else
+	{
+		nos_nodes_in_range(&((*head)->left),low,high,count);
+		nos_nodes_in_range(&((*head)->right),low,high,count);
+		if((*head)->val>=low && (*head)->val<=high)
+		{
+			++count;
+		}
+		return;
+	}
+}
+
+void nos_nodes_in_range_wrapper(struct node **head)
+{
+	int low,high,count=0;
+	cout<<"Enter lower and upper limit : ";
+	cin>>low>>high;
+	nos_nodes_in_range(head,low,high,count);
+	cout<<"The number of nodes in that range are : "<<count;
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+struct node* remove_half_nodes(struct node *head)
+{
+	if(head==NULL)
+	{
+		return head;
+	}
+	head->left = remove_half_nodes(head->left);
+	head->right = remove_half_nodes(head->right);
+	if(head->left==NULL&&head->right==NULL)
+	{
+		return head;
+	}
+	else if(head->left==NULL)
+	{
+		struct node *new_node = head->right;
+		delete head;
+		return new_node;
+	}
+	else if(head->right==NULL)
+	{
+		struct node *new_node = head->left;
+		delete head;
+		return new_node;
+	}
+	else
+	{	
+		return head;
+	}
+}
+
+void remove_half_nodes_wrapper(struct node **head)
+{
+	*head = remove_half_nodes(*head);
+	view_inorder_wrapper(head);
+	return;
+}
+
+void kth_largest_element(struct node *head,int k,int &cur)
+{
+	if(cur>k||head==NULL)
+	{
+		return;
+	}
+	else
+	{
+		kth_largest_element(head->right,k,cur);
+		cur++;
+		if(cur==k)
+		{
+			cout<<head->val;
+			return;
+		}
+		kth_largest_element(head->left,k,cur);
+	}
+}
+
+void kth_largest_element_wrapper(struct node **head)
+{
+	int k,cur=0;
+	cout<<"Enter K : ";
+	cin>>k;
+	cout<<"The Kth Largest Element is : ";
+	kth_largest_element(*head,k,cur);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
 int main(int argc, char* argv[])
 {
 	while(1)
@@ -207,7 +384,12 @@ int main(int argc, char* argv[])
 		cout<<"4. Post Order View\n";
 		cout<<"5. Delete an element\n";
 		cout<<"6. Tree to List View\n";
-		cout<<"7. Exit\n";
+		cout<<"7. Size of tree\n";
+		cout<<"8. Number of Subtrees in Range\n";
+		cout<<"9. Number of Nodes in Range\n";
+		cout<<"10. Remove Half nodes\n";
+		cout<<"11. Kth Largest Element\n";
+		cout<<"12. Exit\n";
 		cout<<"Enter choice: ";
 		cin>>choice;
 		switch(choice)
@@ -225,9 +407,19 @@ int main(int argc, char* argv[])
 					//CALL INORDER BEFORE CASE 6
 			case 6: view_list(&LISTHEAD);
 					break;
+			case 7: size_of_tree_wrapper(&HEAD);
+					break;
+			case 8: nos_subtrees_in_range_wrapper(&HEAD);
+					break;
+			case 9: nos_nodes_in_range_wrapper(&HEAD);
+					break;
+			case 10:remove_half_nodes_wrapper(&HEAD);
+					break;
+			case 11:kth_largest_element_wrapper(&HEAD);
+					break;
 			default:break;
 		}
-		if(choice==7)
+		if(choice==12)
 			break;
 	}
 	return 0;
