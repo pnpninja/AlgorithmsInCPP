@@ -370,7 +370,161 @@ void kth_largest_element_wrapper(struct node **head)
 	}
 	return;
 }
+bool is_balanced(struct node *head,int index,int nos_nodes)
+{
+	if(head==NULL)
+	{
+		return true;
+	}
+	else if(index>=nos_nodes)
+	{
+		return false;
+	}
+	else
+	{
+		return (is_balanced(head->left,(2*index+1),nos_nodes)&&is_balanced(head->right,(2*index+2),nos_nodes));
+	}
+}
 
+void is_balanced_wrapper(struct node *head)
+{
+	int index = 0;
+	int nos_nodes = size_of_tree(&head);
+	bool balance_status = is_balanced(head,index,nos_nodes);
+	if(balance_status)
+	{
+		cout<<"It is balanced!";
+	}
+	else
+	{
+		cout<<"It is not balanced!";
+	}
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+int minimum_vertex_cover(struct node *head)
+{
+	if(head==NULL||(head->left==NULL&&head->right==NULL))
+	{
+		return 0;
+	}
+	else
+	{
+		int mvc_head_incl = 1+minimum_vertex_cover(head->left)+minimum_vertex_cover(head->right);
+		int mvc_head_excl = 0;
+		if(head->left)
+		{
+			mvc_head_excl+= 1+minimum_vertex_cover(head->left->left)+minimum_vertex_cover(head->left->right); 
+		}
+		if(head->right)
+		{
+			mvc_head_excl+= 1+minimum_vertex_cover(head->right->left)+minimum_vertex_cover(head->right->right);
+		}
+
+		if(mvc_head_excl<mvc_head_incl)
+		{
+			return mvc_head_excl;
+		}
+		else
+		{
+			return mvc_head_incl;
+		}
+	}
+}
+
+void minimum_vertex_cover_wrapper(struct node *head)
+{
+	cout<<"Minimum vertex cover is : "<<minimum_vertex_cover(head);
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+bool is_complete(struct node *head)
+{
+	if(head==NULL)
+	{
+		return true;
+	}
+	else
+	{
+		bool curr = ((head->left!=NULL&&head->right!=NULL)||(head->left==NULL&&head->right==NULL));
+		bool left = is_complete(head->left);
+		bool right = is_complete(head->right);
+		return left&&right&&curr;
+	}
+}
+
+void is_complete_wrapper(struct node *head)
+{
+	bool status = is_complete(head);
+	if(status)
+	{
+		cout<<"It is complete!";
+	}
+	else
+	{
+		cout<<"It is not complete!";
+	}
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+}
+
+void left_leaf_sum(struct node *head,int &sum)
+{
+	if(head!=NULL)
+	{
+		if(head->left->left==NULL&&head->left->right==NULL)
+		{
+			sum+=head->left->val;
+			return;
+		}
+		else
+		{
+			left_leaf_sum(head->left,sum);
+		}
+		left_leaf_sum(head->right,sum);
+		return;
+	}
+}
+
+void left_leaf_sum_wrapper(struct node *head)
+{
+	int sum = 0;
+	left_leaf_sum(head,sum);
+	cout<<"The sum of all left leaves is : "<<sum;
+	char temp;
+	cout<<"\nPress Y to return : ";
+	cin>>temp;
+	while(temp!='Y')
+	{
+		cout<<"Press Y to return : ";
+		cin>>temp;
+	}
+	return;
+
+}
 int main(int argc, char* argv[])
 {
 	while(1)
@@ -389,7 +543,11 @@ int main(int argc, char* argv[])
 		cout<<"9. Number of Nodes in Range\n";
 		cout<<"10. Remove Half nodes\n";
 		cout<<"11. Kth Largest Element\n";
-		cout<<"12. Exit\n";
+		cout<<"12. Check if balanced\n";
+		cout<<"13. Minimum Vertex Cover\n";
+		cout<<"14. Check if Complete BST\n";
+		cout<<"15. Sum of all left leaves\n";
+		cout<<"16. Exit\n";
 		cout<<"Enter choice: ";
 		cin>>choice;
 		switch(choice)
@@ -417,9 +575,17 @@ int main(int argc, char* argv[])
 					break;
 			case 11:kth_largest_element_wrapper(&HEAD);
 					break;
+			case 12:is_balanced_wrapper(HEAD);
+					break;
+			case 13:minimum_vertex_cover_wrapper(HEAD);
+					break;
+			case 14:is_complete_wrapper(HEAD);
+					break;
+			case 15:left_leaf_sum_wrapper(HEAD);
+					break;
 			default:break;
 		}
-		if(choice==12)
+		if(choice==16)
 			break;
 	}
 	return 0;
