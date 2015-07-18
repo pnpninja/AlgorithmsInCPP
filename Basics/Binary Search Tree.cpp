@@ -164,7 +164,7 @@ void view_postorder(struct node **head)
 
 void view_postorder_wrapper(struct node **head)
 {
-	cout<<"The Inorder Of the Binary Search Tree : \n";
+	cout<<"The post order Of the Binary Search Tree : \n";
 	view_postorder(head);
 	char temp;
 	cout<<"\nPress Y to return : ";
@@ -201,6 +201,27 @@ void add_element(struct node **head,int val)
 		{
 			return;
 		}
+	}
+}
+
+struct node *parent(struct node *head,struct node *ele)
+{
+	
+}
+struct next_biggest_number(struct node *head)
+{
+	if(head->right!=NULL)
+	{
+		struct node *traverser = head->right;
+		while(traverser!=NULL)
+		{
+			traverser=traverser->left;
+		}
+		return traverser;
+	}
+	else
+	{
+
 	}
 }
 
@@ -745,12 +766,32 @@ void spiral_order_print(struct node *head)
 	}
 	return;
 }
+
+bool is_mirror(struct node *a,struct node *b)
+{
+	if(a==NULL&&b==NULL)
+	{
+		return true;
+	}
+	if(a==NULL||b==NULL)
+	{
+		return false;
+	}
+	else
+	{
+		return is_mirror(a->left,b->right)&&is_mirror(a->right,b->left);
+	}
+}
+
+
 int main(int argc, char* argv[])
 {
 	while(1)
 	{
 		clear();
 		int choice;
+		char temp;
+		bool check;
 		cout<<"BST BASICS\n";
 		cout<<"1. Add new element\n";
 		cout<<"2. Inorder View\n";
@@ -773,7 +814,8 @@ int main(int argc, char* argv[])
 		cout<<"19. Right View\n";
 		cout<<"20. Level Order View\n";
 		cout<<"21. Spiral Order View\n";
-		cout<<"22. Exit\n";
+		cout<<"22. Check if foldable\n";
+		cout<<"23. Exit\n";
 		cout<<"Enter choice: ";
 		cin>>choice;
 		switch(choice)
@@ -821,9 +863,25 @@ int main(int argc, char* argv[])
 					break;
 			case 21:spiral_order_print(HEAD);
 					break;
+			case 22:check = is_mirror(HEAD->left,HEAD->right);
+					if(check)
+					{
+						cout<<"\nIt is foldable";
+					}
+					else
+					{
+						cout<<"\nIt is not foldable";
+					}
+					cout<<"\nPress Y to return : ";
+					cin>>temp;
+					while(temp!='Y')
+					{
+						cout<<"Press Y to return : ";
+						cin>>temp;
+					}
 			default:break;
 		}
-		if(choice==22)
+		if(choice==23)
 			break;
 	}
 	return 0;
