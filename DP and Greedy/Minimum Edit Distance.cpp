@@ -10,7 +10,6 @@ int min(int a,int b)
 int minimum_edit_distance(string s1,string s2)
 {
 	int matrix[s2.size()+1][s1.size()+1];
-	cout<<endl;
 	for(int a=0;a<=s2.size();a++)
 	{
 		for(int b=0;b<=s1.size();b++)
@@ -31,9 +30,7 @@ int minimum_edit_distance(string s1,string s2)
 			{
 				matrix[a][b] = min(matrix[a][b-1],min(matrix[a-1][b-1],matrix[a-1][b]))+1;
 			}
-			cout<<matrix[a][b]<<" ";
 		}
-		cout<<endl;
 	}
 	return matrix[s2.size()][s1.size()];
 }
@@ -46,6 +43,6 @@ int main()
 	cin>>s1;
 	cout<<"Enter Final String : ";
 	cin>>s2;
-	cout<<"THe minimum edit distance is "<<minimum_edit_distance(s1,s2)<<endl;
+	cout<<"The minimum edit distance is "<<minimum_edit_distance(s1,s2)<<endl;
 	return 0;
 }
